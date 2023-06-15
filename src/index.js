@@ -18,8 +18,9 @@ io.on('connection', (socket) => {
   socket.emit('message', 'Welcome to the the chat!')
   socket.broadcast.emit('message', 'A user has joined the chat')
 
-  socket.on('sendMessage', (message) => {
-    
+  socket.on('sendMessage', (message, callback) => {
+    io.emit('message', message)
+    callback()
   })
 
 
