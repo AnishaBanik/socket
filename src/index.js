@@ -12,20 +12,27 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectoryPath));
 
+const generateMessage = (text) => {
+  return{
+    text,
+    sentAt: new Date().getTime()
+  }
+}
+
 io.on('connection', (socket) => {
   console.log('New WebSocket connection')
 
-  socket.emit('message', 'Welcome to the the chat!')
-  socket.broadcast.emit('message', 'A user has joined the chat')
+  socket.emit('message', generateMessage('Welcome to the the chat!'))
+  socket.broadcast.emit('message', generateMessage('A user has joined the chat'))
 
   socket.on('sendMessage', (message, callback) => {
-    io.emit('message', message)
+    io.emit('message', generateMessage(message))
     callback()
   })
 
 
   socket.on('disconnect', () => {
-    io.emit('message', 'User has left the chat')
+    io.emit('message', generateMessage('User has left the chat'))
   })
 })
 
